@@ -181,6 +181,14 @@ import { TitleCasePipe } from '../../pipes/title-case.pipe';
         margin-top: auto;
         padding-top: 0.85rem;
       }
+      @media (max-width: 575.98px) {
+        .card-actions .btn {
+          padding: 0.4rem 0.9rem;
+          font-size: 0.8rem;
+          line-height: 1.35;
+          white-space: nowrap;
+        }
+      }
     `,
   ],
 })
