@@ -1,4 +1,4 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,7 +11,11 @@ import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 @NgModule({
   declarations: [App],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, ToasterComponent],
-  providers: [provideHttpClient(withInterceptors([jwtInterceptor])), provideBrowserGlobalErrorListeners()],
+  providers: [
+    provideHttpClient(withInterceptors([jwtInterceptor])),
+    provideBrowserGlobalErrorListeners(),
+    provideZoneChangeDetection(),
+  ],
   bootstrap: [App],
 })
 export class AppModule {}
