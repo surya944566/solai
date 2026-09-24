@@ -1,0 +1,126 @@
+<div class="admin-users">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h4 class="admin-page-title mb-0">User Management</h4>
+    <button class="btn btn-primary-custom" (click)="showCreate = !showCreate">
+      <i class="bi bi-person-plus me-1"></i>Add User
+    </button>
+  </div>
+
+  @if (showCreate) {
+    <div class="card-custom p-4 mb-4 fade-in-up">
+      <h6 class="mb-3">Create New User</h6>
+      <form [formGroup]="createForm" (ngSubmit)="createUser()" class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" formControlName="name" placeholder="e.g. Ravi Kumar" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Email or Mobile</label>
+          <input type="text" class="form-control" formControlName="emailOrMobile" placeholder="email@example.com or mobile" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Password (optional)</label>
+          <input type="text" class="form-control" formControlName="password" placeholder="auto" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Status</label>
+          <select class="form-select" formControlName="status">
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+          </select>
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button class="btn btn-primary-custom" [disabled]="creating">
+            @if (creating) {
+              <span class="spinner-border spinner-border-sm me-2"></span>Creating...
+            } @else {
+              <i class="bi bi-check-lg me-1"></i>Create
+            }
+          </button>
+          <button type="button" class="btn btn-soft" (click)="showCreate = false">Cancel</button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="card-custom p-3 mb-3">
+    <div class="row g-2">
+      <div class="col-md-7">
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search by name, email or mobile..."
+            [(ngModel)]="keyword"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" [(ngModel)]="statusFilter" (change)="onSearch()">
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-gold w-100" (click)="onSearch()">Search</button>
+      </div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="spinner-wrap"><app-spinner></app-spinner></div>
+  } @else if (error) {
+    <app-empty-state [title]="'Error'" [message]="error" [icon]="'bi-exclamation-triangle'" [actionLabel]="'Retry'" (action)="load()"></app-empty-state>
+  } @else if (!users.length) {
+    <app-empty-state [title]="'No users found'" [message]="'Try adjusting your search or filters.'" [icon]="'bi-people'"></app-empty-state>
+  } @else {
+    <div class="card-custom overflow-hidden">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Contact</th>
+              <th>Joined</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users; track u._id) {
+              <tr>
+                <td>
+                  <strong>{{ u.name }}</strong>
+                </td>
+                <td class="text-muted small">
+                  <div>{{ u.email || '—' }}</div>
+                  <div>{{ u.mobile || '' }}</div>
+                </td>
+                <td class="text-muted small">{{ u.createdAt ? (u.createdAt | date:'mediumDate') : '—' }}</td>
+                <td><span class="badge badge-status {{ u.status }}">{{ u.status | titleCase }}</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    @if (u.status === 'blocked') {
+                      <button class="btn btn-sm btn-soft" title="Activate" (click)="activate(u)"><i class="bi bi-unlock"></i></button>
+                    } @else {
+                      <button class="btn btn-sm btn-outline-danger" title="Block" (click)="block(u)"><i class="bi bi-lock"></i></button>
+                    }
+                    <button class="btn btn-sm btn-soft" title="Reset Password" (click)="resetPassword(u)"><i class="bi bi-key"></i></button>
+                    <button class="btn btn-sm btn-outline-danger" title="Delete" (click)="remove(u)"><i class="bi bi-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mt-3">
+      <app-pagination [page]="page" [pages]="pages" (pageChange)="onPageChange($event)"></app-pagination>
+    </div>
+  }
+</div>

@@ -1,0 +1,67 @@
+<div class="notif-page">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">
+      Notifications
+      @if (unread) {
+        <span class="badge badge-status pending ms-2">{{ unread }}</span>
+      }
+    </h4>
+    @if (unread) {
+      <button class="btn btn-soft btn-sm" (click)="markAll()"><i class="bi bi-check-all me-1"></i>Mark All Read</button>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="spinner-wrap"><app-spinner></app-spinner></div>
+  } @else if (error) {
+    <app-empty-state
+      [title]="'Something went wrong'"
+      [message]="error"
+      [icon]="'bi-exclamation-triangle'"
+      [actionLabel]="'Retry'"
+      (action)="load()"
+    ></app-empty-state>
+  } @else if (!items.length) {
+    <app-empty-state
+      [title]="'No notifications'"
+      [message]="'When you get alerts or updates, they will appear here.'"
+      [icon]="'bi-bell'"
+    ></app-empty-state>
+  } @else {
+    <div class="notif-list">
+      @for (n of items; track n._id) {
+        <div
+          class="notif-item card-custom p-3 d-flex gap-3"
+          [class.unread]="!n.read"
+          (click)="open(n)"
+        >
+          <span class="notif-icon type-{{ n.type }}"><i class="bi {{ iconFor(n.type) }}"></i></span>
+          <div class="notif-body">
+            <strong>{{ n.title }}</strong>
+            @if (n.message) {
+              <p class="text-muted small mb-0">{{ n.message }}</p>
+            }
+          </div>
+          <span class="notif-time text-muted small text-nowrap">{{ timeAgo(n.createdAt) }}</span>
+        </div>
+      }
+    </div>
+    @if (pages > 1) {
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center mb-0">
+          <li class="page-item" [class.disabled]="page <= 1">
+            <button class="page-link" (click)="onPageChange(page - 1)">Prev</button>
+          </li>
+          @for (p of pageNumbers(); track p) {
+            <li class="page-item" [class.active]="page === p">
+              <button class="page-link" (click)="onPageChange(p)">{{ p }}</button>
+            </li>
+          }
+          <li class="page-item" [class.disabled]="page >= pages">
+            <button class="page-link" (click)="onPageChange(page + 1)">Next</button>
+          </li>
+        </ul>
+      </nav>
+    }
+  }
+</div>

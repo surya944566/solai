@@ -1,0 +1,25 @@
+<section class="how" id="how-it-works">
+  <div class="container-xl">
+    <div class="section-title">
+      <span class="eyebrow">Simple Process</span>
+      <h2>How Solai Matrimony Works</h2>
+      <p>A simple, guided journey to find the perfect life partner.</p>
+    </div>
+
+    <div class="how-grid">
+      @for (step of steps; track step.title; let i = $index) {
+        <div class="how-step" appReveal [delay]="i * 120">
+          <div class="step-node">
+            <span class="step-icon"><i class="bi {{ step.icon }}"></i></span>
+            <span class="step-number">{{ i + 1 }}</span>
+          </div>
+          @if (i < 3) {
+            <span class="step-line"><i class="bi bi-arrow-right"></i></span>
+          }
+          <h5>{{ step.title }}</h5>
+          <p>{{ step.text }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,122 @@
+<div class="support-page">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Support Chat</h4>
+    <button class="btn btn-primary-custom btn-sm" (click)="showNewForm = !showNewForm">
+      <i class="bi bi-plus-lg me-1"></i>New Conversation
+    </button>
+  </div>
+
+  @if (showNewForm) {
+    <div class="card-custom p-3 mb-4 fade-in-up">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="What would you like to discuss? (e.g. Profile verification)"
+          [(ngModel)]="newSubject"
+        />
+        <button class="btn btn-gold" (click)="openNewConversation()">Start</button>
+      </div>
+    </div>
+  }
+
+  @if (error && !conversations.length) {
+    <app-empty-state
+      [title]="'Something went wrong'"
+      [message]="error"
+      [icon]="'bi-exclamation-triangle'"
+      [actionLabel]="'Retry'"
+      (action)="loadConversations()"
+    ></app-empty-state>
+  } @else {
+    <div class="chat-wrap card-custom overflow-hidden">
+      <div class="chat-side">
+        <h6 class="chat-side-title">Conversations</h6>
+        @if (loadingConversations) {
+          <div class="p-3"><app-spinner></app-spinner></div>
+        } @else if (!conversations.length) {
+          <div class="p-3 text-center text-muted small">
+            No conversations yet.<br />Start one with the button above.
+          </div>
+        } @else {
+          @for (conv of conversations; track conv._id) {
+            <button
+              class="conv-item"
+              [class.active]="active?._id === conv._id"
+              (click)="openConversation(conv)"
+            >
+              <div class="conv-top">
+                <strong>{{ conv.subject || 'Support Conversation' }}</strong>
+                @if (conv.unreadForUser) {
+                  <span class="conv-badge">{{ conv.unreadForUser }}</span>
+                }
+              </div>
+              <div class="conv-preview">
+                <span class="badge badge-status {{ conv.status }}">{{ conv.status }}</span>
+                <span class="text-truncate">{{ conv.lastMessagePreview || 'No messages yet' }}</span>
+              </div>
+            </button>
+          }
+        }
+      </div>
+
+      <div class="chat-main">
+        @if (!active) {
+          <div class="chat-empty">
+            <span class="chat-empty-icon"><i class="bi bi-headset"></i></span>
+            <p class="mb-0">Select a conversation or start a new one.</p>
+          </div>
+        } @else {
+          <div class="chat-header">
+            <div>
+              <strong>{{ active.subject || 'Support Conversation' }}</strong>
+              <span class="badge badge-status {{ active.status }} ms-2">{{ active.status }}</span>
+            </div>
+            <span class="text-muted small">
+              <i class="bi bi-alarm me-1"></i>Avg response time: within 24 hours
+            </span>
+          </div>
+
+          <div id="chat-messages" class="chat-messages">
+            @if (loadingMessages) {
+              <div class="text-center p-4"><app-spinner></app-spinner></div>
+            } @else {
+              @for (msg of messages; track msg._id) {
+                <div class="msg-row {{ msg.sender === 'user' ? 'mine' : 'theirs' }}">
+                  <div class="msg-bubble">
+                    <span class="msg-name">{{ msg.senderName || (msg.sender === 'user' ? 'You' : 'Admin') }}</span>
+                    <p class="mb-0">{{ msg.body }}</p>
+                    <span class="msg-time">{{ msg.createdAt ? (msg.createdAt | date:'short') : '' }}</span>
+                  </div>
+                </div>
+              }
+              @if (!messages.length) {
+                <p class="text-center text-muted small py-4">
+                  No messages yet. Say hello to our support team!
+                </p>
+              }
+            }
+          </div>
+
+          <div class="chat-input">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Type your message..."
+              [(ngModel)]="draft"
+              (keyup.enter)="send()"
+              [disabled]="active.status === 'closed' || active.status === 'blocked'"
+            />
+            <button class="btn btn-primary-custom" (click)="send()" [disabled]="sending || !draft.trim() || active.status === 'closed' || active.status === 'blocked'">
+              @if (sending) {
+                <span class="spinner-border spinner-border-sm"></span>
+              } @else {
+                <i class="bi bi-send"></i>
+              }
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

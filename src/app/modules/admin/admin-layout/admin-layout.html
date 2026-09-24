@@ -1,0 +1,59 @@
+<div class="admin-shell">
+  <aside class="admin-sidebar d-none d-lg-flex">
+    <div class="admin-brand">
+      <i class="bi bi-heart-fill"></i>
+      <span>Solai Admin</span>
+    </div>
+
+    <nav class="admin-nav">
+      @for (item of menu; track item.path) {
+        <a
+          class="admin-link"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.path === '/admin/dashboard' }"
+        >
+          <i class="bi {{ item.icon }}"></i>
+          <span>{{ item.label }}</span>
+          @if (item.badge) {
+            <span class="admin-badge">{{ item.badge }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    <div class="admin-foot">
+      <a class="admin-link" href="/" target="_blank"><i class="bi bi-globe2"></i><span>View Site</span></a>
+      <a class="admin-link" (click)="logout()" href="javascript:void(0)"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
+      <div class="admin-user">
+        <i class="bi bi-person-circle"></i>
+        <span>{{ adminName }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar d-lg-none">
+      <button class="btn btn-soft btn-sm" (click)="mobileOpen = !mobileOpen"><i class="bi bi-list"></i></button>
+      <strong>{{ currentTitle }}</strong>
+      <i class="bi bi-person-circle ms-auto" style="font-size: 1.5rem; color: var(--primary-color)"></i>
+    </div>
+
+    @if (mobileOpen) {
+      <div class="admin-drawer" (click)="mobileOpen = false">
+        <div class="admin-drawer-inner" (click)="$event.stopPropagation()">
+          @for (item of menu; track item.path) {
+            <a class="admin-link" [routerLink]="item.path" routerLinkActive="active" (click)="mobileOpen = false">
+              <i class="bi {{ item.icon }}"></i><span>{{ item.label }}</span>
+            </a>
+          }
+          <a class="admin-link" (click)="logout()" href="javascript:void(0)"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
+        </div>
+      </div>
+    }
+
+    <div class="admin-stage">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

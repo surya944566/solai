@@ -1,0 +1,87 @@
+<div class="dash-shell">
+  <app-site-nav></app-site-nav>
+
+  <div class="dash-main">
+    <aside class="dash-sidebar d-none d-lg-block">
+      <div class="side-user">
+        <span class="side-avatar">{{ userInitials }}</span>
+        <div class="side-user-info">
+          <strong>{{ userName }}</strong>
+          <span>Member</span>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        @for (item of menuItems; track item.path) {
+          <a
+            class="side-link"
+            [routerLink]="item.path"
+            [class.active]="item.end ? router.url === item.path : router.url.startsWith(item.path)"
+          >
+            <i class="bi {{ item.icon }}"></i>
+            <span>{{ item.label }}</span>
+            @if (item.badge) {
+              <span class="side-badge">{{ item.badge }}</span>
+            }
+          </a>
+        }
+      </nav>
+
+      <div class="side-foot">
+        <a class="side-link" routerLink="/browse">
+          <i class="bi bi-search"></i>
+          <span>Browse All Profiles</span>
+        </a>
+        <a class="side-link" (click)="logout()" href="javascript:void(0)">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <main class="dash-content">
+      <div class="mobile-topbar d-lg-none">
+        <button class="btn btn-soft btn-sm" (click)="mobileOpen = !mobileOpen">
+          <i class="bi bi-list"></i>
+        </button>
+        <strong>{{ currentTitle }}</strong>
+        <span class="side-avatar small">{{ userInitials }}</span>
+      </div>
+
+      @if (mobileOpen) {
+        <div class="mobile-drawer" (click)="mobileOpen = false">
+          <div class="mobile-drawer-inner" (click)="$event.stopPropagation()">
+            <nav class="side-nav">
+              @for (item of menuItems; track item.path) {
+                <a
+                  class="side-link"
+                  [routerLink]="item.path"
+                  [class.active]="item.end ? router.url === item.path : router.url.startsWith(item.path)"
+                  (click)="mobileOpen = false"
+                >
+                  <i class="bi {{ item.icon }}"></i>
+                  <span>{{ item.label }}</span>
+                  @if (item.badge) {
+                    <span class="side-badge">{{ item.badge }}</span>
+                  }
+                </a>
+              }
+              <a class="side-link" routerLink="/browse">
+                <i class="bi bi-search"></i>
+                <span>Browse All Profiles</span>
+              </a>
+              <a class="side-link" (click)="logout()" href="javascript:void(0)">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      }
+
+      <div class="dash-stage">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

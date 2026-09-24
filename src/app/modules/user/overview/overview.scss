@@ -1,0 +1,111 @@
+.welcome-card {
+  background:
+    radial-gradient(circle at 90% 30%, color-mix(in srgb, var(--secondary-color) 20%, transparent), transparent 40%),
+    linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  color: #fff;
+  border: none;
+  padding: 2rem 2.2rem;
+}
+
+.welcome-card h2 {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.welcome-card p {
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0;
+}
+
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.stat-card {
+  padding: 1.4rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.stat-card strong {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.stat-card span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #fff;
+}
+.stat-icon.heart {
+  background: linear-gradient(135deg, #e05d7d, #c1294f);
+}
+.stat-icon.chat {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+.stat-icon.bell {
+  background: linear-gradient(135deg, var(--info-color), #1d6fa8);
+}
+.stat-icon.headset {
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+.list-row:last-child {
+  border-bottom: none;
+}
+.list-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notif-row {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  font-size: 0.88rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.notif-row:last-child {
+  border-bottom: none;
+}
+.notif-row i {
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+@media (max-width: 767.98px) {
+  .stat-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

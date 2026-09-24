@@ -1,0 +1,32 @@
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.table thead th {
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--primary-color) 5%, #fff);
+  white-space: nowrap;
+}
+
+.table-avatar {
+  width: 42px;
+  height: 42px;
+}
+
+.table-avatar :is(img, .avatar-placeholder) {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.badge-status.featured {
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+  color: #fff;
+  font-size: 0.7rem;
+}

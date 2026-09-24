@@ -1,0 +1,79 @@
+<section class="showcase">
+  <div class="container-xl">
+    <div class="section-title">
+      <span class="eyebrow">Featured Spotlight</span>
+      <h2>Profile of the Week</h2>
+    </div>
+
+    @if (loading) {
+      <div class="showcase-card card-custom p-0 overflow-hidden">
+        <div class="row g-0">
+          <div class="col-md-5 skeleton" style="min-height: 420px; border-radius: 0"></div>
+          <div class="col-md-7 p-4 p-lg-5">
+            <div class="skeleton mb-3" style="height: 20px; width: 50%"></div>
+            <div class="skeleton mb-4" style="height: 40px; width: 70%"></div>
+            <div class="skeleton mb-2" style="height: 14px"></div>
+            <div class="skeleton mb-2" style="height: 14px"></div>
+            <div class="skeleton mb-2" style="height: 14px; width: 80%"></div>
+          </div>
+        </div>
+      </div>
+    } @else if (error) {
+      <div class="empty-state">
+        <span class="empty-icon"><i class="bi bi-exclamation-triangle"></i></span>
+        <h5>Unable to load</h5>
+        <p>{{ error }}</p>
+      </div>
+    } @else if (profile) {
+      <div class="showcase-card card-custom p-0 overflow-hidden" appReveal>
+        <div class="row g-0">
+          <div class="col-md-5 showcase-media">
+            <app-profile-img [src]="profile.profilePhoto || ''" [name]="profile.name"></app-profile-img>
+            <span class="spotlight-badge"><i class="bi bi-star-fill me-1"></i>Featured</span>
+          </div>
+          <div class="col-md-7 showcase-body">
+            <span class="eyebrow">#{{ profile.profileId }}</span>
+            <h3>{{ profile.name }}</h3>
+            <div class="showcase-meta">
+              @if (profile.age) {
+                <span><i class="bi bi-calendar3"></i> {{ profile.age }} years</span>
+              }
+              @if (profile.maritalStatus) {
+                <span><i class="bi bi-badge-cc"></i> {{ profile.maritalStatus | titleCase }}</span>
+              }
+              @if (profile.location) {
+                <span><i class="bi bi-geo-alt"></i> {{ profile.location }}</span>
+              }
+            </div>
+            <div class="showcase-facts">
+              @if (profile.education) {
+                <div class="fact-item">
+                  <span class="fact-icon"><i class="bi bi-mortarboard"></i></span>
+                  <span><small>Education</small><strong>{{ profile.education }}</strong></span>
+                </div>
+              }
+              @if (profile.occupation) {
+                <div class="fact-item">
+                  <span class="fact-icon"><i class="bi bi-briefcase"></i></span>
+                  <span><small>Occupation</small><strong>{{ profile.occupation }}</strong></span>
+                </div>
+              }
+              @if (profile.height) {
+                <div class="fact-item">
+                  <span class="fact-icon"><i class="bi bi-rulers"></i></span>
+                  <span><small>Height</small><strong>{{ profile.height }}</strong></span>
+                </div>
+              }
+            </div>
+            @if (profile.about) {
+              <p class="showcase-about">{{ profile.about }}</p>
+            }
+            <a [routerLink]="['/browse/profile', profile._id]" class="btn btn-primary-custom btn-lg mt-2">
+              View Full Profile <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

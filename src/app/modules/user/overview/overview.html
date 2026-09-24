@@ -1,0 +1,113 @@
+<div class="overview-page">
+  @if (user) {
+    <div class="welcome-card card-custom mb-4">
+      <div class="row align-items-center g-3">
+        <div class="col-md-8">
+          <h2>Welcome, {{ user.name.split(' ')[0] }}! <span>🙏</span></h2>
+          <p>Manage your saves, enquiries and support — all in one place.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <a routerLink="/browse" class="btn btn-primary-custom"><i class="bi bi-search me-2"></i>Find a Match</a>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="stat-cards mb-4">
+    <div class="stat-card card-custom" (click)="go('/dashboard/saved')">
+      <span class="stat-icon heart"><i class="bi bi-heart"></i></span>
+      <div>
+        <strong>{{ savedCount }}</strong>
+        <span>Saved Profiles</span>
+      </div>
+    </div>
+    <div class="stat-card card-custom" (click)="go('/dashboard/enquiries')">
+      <span class="stat-icon chat"><i class="bi bi-chat-heart"></i></span>
+      <div>
+        <strong>{{ enquiryCount }}</strong>
+        <span>Enquiries Sent</span>
+      </div>
+    </div>
+    <div class="stat-card card-custom" (click)="go('/dashboard/notifications')">
+      <span class="stat-icon bell"><i class="bi bi-bell"></i></span>
+      <div>
+        <strong>{{ unreadCount }}</strong>
+        <span>Unread Alerts</span>
+      </div>
+    </div>
+    <div class="stat-card card-custom" (click)="go('/dashboard/support')">
+      <span class="stat-icon headset"><i class="bi bi-headset"></i></span>
+      <div>
+        <strong>24/7</strong>
+        <span>Support</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card-custom p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Latest Profiles</h5>
+          <a routerLink="/browse" class="btn btn-sm btn-link">View all</a>
+        </div>
+        @if (latestProfiles.length) {
+          <div class="row g-3">
+            @for (profile of latestProfiles; track profile._id) {
+              <div class="col-6 col-md-3">
+                <app-profile-card [profile]="profile" [showActions]="false"></app-profile-card>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="text-muted">No profiles yet. Check back soon!</p>
+        }
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card-custom p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Recent Enquiries</h5>
+          <a routerLink="/dashboard/enquiries" class="btn btn-sm btn-link">All</a>
+        </div>
+        @if (enquiries.length) {
+          @for (enq of enquiries; track enq._id) {
+            <div class="list-row">
+              <span class="badge badge-status {{ enq.status }}">
+                {{ statusLabel(enq.status) }}
+              </span>
+              <span class="list-title">
+                @if (typeof enq.profile === 'object' && enq.profile.name) {
+                  {{ enq.profile.name }}
+                } @else {
+                  Profile enquiry
+                }
+              </span>
+            </div>
+          }
+        } @else {
+          <p class="text-muted mb-1">No enquiries yet.</p>
+          <a routerLink="/browse" class="btn btn-sm btn-gold"><i class="bi bi-search me-1"></i>Browse Profiles</a>
+        }
+      </div>
+
+      <div class="card-custom p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Notifications</h5>
+          <a routerLink="/dashboard/notifications" class="btn btn-sm btn-link">All</a>
+        </div>
+        @if (notifications.length) {
+          @for (n of notifications; track n._id) {
+            <div class="notif-row {{ unreadOf(n) }}">
+              <i class="bi bi-bell me-2"></i>
+              <span>{{ n.title }}</span>
+            </div>
+          }
+        } @else {
+          <p class="text-muted mb-0">You are all caught up!</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

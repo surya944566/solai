@@ -1,0 +1,156 @@
+<div class="browse-page">
+  <app-site-nav></app-site-nav>
+
+  <div class="browse-hero">
+    <div class="container-xl">
+      <h1>Browse Matrimonial Profiles</h1>
+      <p>Explore trusted, verified profiles curated by our team.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="filterForm" novalidate>
+  <section class="browse-body py-4">
+    <div class="container-xl">
+      <div class="browse-toolbar mb-4">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="keyword"
+            placeholder="Search by name, location, education..."
+          />
+        </div>
+        <button class="btn btn-soft d-lg-none" (click)="filtersOpen = !filtersOpen">
+          <i class="bi bi-sliders me-1"></i> Filters
+        </button>
+        <div class="d-none d-lg-flex align-items-center gap-2 ms-auto">
+          <select class="form-select" formControlName="sort" style="width: auto">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="views">Most Viewed</option>
+            <option value="name_asc">Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-3">
+          <div class="filter-panel" [class.open]="filtersOpen">
+            <div class="filter-header">
+              <h6 class="mb-0"><i class="bi bi-funnel me-1"></i> Filters</h6>
+              <button class="btn btn-sm btn-link p-0" (click)="clearFilters()">Clear All</button>
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Category</label>
+              <select class="form-select" formControlName="category">
+                @for (c of categories; track c.key) {
+                  <option [value]="c.key">{{ c.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Gender</label>
+              <select class="form-select" formControlName="gender">
+                <option value="">Any</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Age Range</label>
+              <div class="d-flex gap-2">
+                <input type="number" class="form-control" formControlName="minAge" placeholder="Min" min="18" max="100" />
+                <input type="number" class="form-control" formControlName="maxAge" placeholder="Max" min="18" max="100" />
+              </div>
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">State</label>
+              <select class="form-select" formControlName="state">
+                <option value="">All States</option>
+                @for (s of states; track s) {
+                  <option>{{ s }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">District</label>
+              <input type="text" class="form-control" formControlName="district" placeholder="e.g. Chennai" />
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Location / City</label>
+              <input type="text" class="form-control" formControlName="location" placeholder="e.g. Chennai" />
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Marital Status</label>
+              <select class="form-select" formControlName="maritalStatus">
+                <option value="">Any</option>
+                @for (m of maritalStatuses; track m) {
+                  <option [value]="m">{{ m | titleCase }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Education</label>
+              <input type="text" class="form-control" formControlName="education" placeholder="e.g. B.E, MBA" />
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Occupation</label>
+              <input type="text" class="form-control" formControlName="occupation" placeholder="e.g. Engineer" />
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Height</label>
+              <input type="text" class="form-control" formControlName="height" placeholder="e.g. 5'9&quot;" />
+            </div>
+
+            <div class="form-group-wrap">
+              <label class="form-label">Profile ID</label>
+              <input type="text" class="form-control" formControlName="profileId" placeholder="e.g. SL123456" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-9">
+          <div class="result-info d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted" style="font-size: 0.88rem">
+              @if (!loading) {
+                Showing {{ profiles.length }} of {{ total }} profiles
+              }
+            </span>
+            @if (hasFilters()) {
+              <span class="badge badge-status pending"><i class="bi bi-funnel me-1"></i>Filtered</span>
+            }
+          </div>
+
+          <app-profile-grid
+            [profiles]="profiles"
+            [loading]="loading"
+            [error]="error"
+            [skeletonCount]="8"
+            (retry)="load()"
+            (save)="toggleSave($event)"
+            (enquiry)="openEnquiry($event)"
+          ></app-profile-grid>
+
+          <div class="mt-4">
+            <app-pagination [page]="page" [pages]="pages" (pageChange)="onPageChange($event)"></app-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </form>
+
+  <app-site-footer></app-site-footer>
+</div>

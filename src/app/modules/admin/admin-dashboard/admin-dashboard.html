@@ -1,0 +1,159 @@
+<div class="admin-dash">
+  <h4 class="admin-page-title">Admin Dashboard</h4>
+
+  @if (loading) {
+    <div class="row g-3 mb-4">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="col-6 col-lg-3">
+          <div class="card-custom p-4"><div class="skeleton" style="height: 60px"></div></div>
+        </div>
+      }
+    </div>
+  } @else if (error) {
+    <app-empty-state [title]="'Error'" [message]="error" [icon]="'bi-exclamation-triangle'" [actionLabel]="'Retry'" (action)="load()"></app-empty-state>
+  } @else if (data) {
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="card-custom p-4 stat-block blue">
+          <span class="stat-icon"><i class="bi bi-people"></i></span>
+          <div>
+            <strong>{{ data.stats.totalUsers }}</strong>
+            <span>Registered Users</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="card-custom p-4 stat-block green">
+          <span class="stat-icon"><i class="bi bi-person-badge"></i></span>
+          <div>
+            <strong>{{ data.stats.totalMale + data.stats.totalFemale }}</strong>
+            <span>Total Profiles</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="card-custom p-4 stat-block amber">
+          <span class="stat-icon"><i class="bi bi-chat-heart"></i></span>
+          <div>
+            <strong>{{ data.stats.pendingEnquiries }}</strong>
+            <span>Pending Enquiries</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="card-custom p-4 stat-block red">
+          <span class="stat-icon"><i class="bi bi-headset"></i></span>
+          <div>
+            <strong>{{ data.stats.unreadSupportMessages }}</strong>
+            <span>Unread Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3"><div class="card-custom p-3 text-center"><strong>{{ data.stats.activeUsers }}</strong><span class="text-muted d-block small">Active Users</span></div></div>
+      <div class="col-6 col-lg-3"><div class="card-custom p-3 text-center"><strong>{{ data.stats.blockedUsers }}</strong><span class="text-muted d-block small">Blocked Users</span></div></div>
+      <div class="col-6 col-lg-3"><div class="card-custom p-3 text-center"><strong>{{ data.stats.featuredProfiles }}</strong><span class="text-muted d-block small">Featured</span></div></div>
+      <div class="col-6 col-lg-3"><div class="card-custom p-3 text-center"><strong>{{ data.stats.marriedProfiles }}</strong><span class="text-muted d-block small">Married Profiles</span></div></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card-custom p-4">
+          <h6 class="mb-3"><i class="bi bi-bar-chart me-2" style="color: var(--primary-color)"></i>Monthly Registrations</h6>
+          <div class="chart-bars">
+            @for (item of data.charts.monthlyRegistrations.slice(-8); track item._id) {
+              <div class="chart-bar-col">
+                <span class="chart-count">{{ item.count }}</span>
+                <div class="chart-bar" [style.height.%]="percent(item.count, maxMonthly())"></div>
+                <span class="chart-label">{{ item._id.slice(5) }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card-custom p-4">
+          <h6 class="mb-3"><i class="bi bi-pie-chart me-2" style="color: var(--primary-color)"></i>Gender Split</h6>
+          <div class="d-flex flex-column gap-2">
+            @for (g of data.charts.genderDistribution; track g._id) {
+              <div>
+                <div class="d-flex justify-content-between small mb-1">
+                  <span>{{ g._id ? (g._id | titleCase) : 'Other' }}</span>
+                  <strong>{{ g.count }}</strong>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" [style.width.%]="percent(g.count, data.stats.totalMale + data.stats.totalFemale)"></div>
+                </div>
+              </div>
+            }
+            <div class="mt-2">
+              <h6 class="small mb-2">By Status</h6>
+              @for (s of data.charts.statusDistribution; track s._id) {
+                <span class="badge badge-status {{ s._id }} me-1 mb-1">{{ labelOf(s._id) }} ({{ s.count }})</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-lg-6">
+        <div class="card-custom p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0"><i class="bi bi-person-plus me-2" style="color: var(--primary-color)"></i>Recent Users</h6>
+            <a routerLink="/admin/users" class="btn btn-sm btn-link">View all</a>
+          </div>
+          @if (data.recent.users.length) {
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead><tr><th>Name</th><th>Contact</th><th>Status</th><th>Since</th></tr></thead>
+                <tbody>
+                  @for (u of data.recent.users; track u._id) {
+                    <tr>
+                      <td><strong>{{ u.name }}</strong></td>
+                      <td class="text-muted small">{{ u.email || u.mobile || '—' }}</td>
+                      <td><span class="badge badge-status {{ u.status }}">{{ labelOf(statusOf(u.status)) }}</span></td>
+                      <td class="text-muted small">{{ u.createdAt ? (u.createdAt | date:'shortDate') : '' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <p class="text-muted small mb-0">No users registered yet.</p>
+          }
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card-custom p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0"><i class="bi bi-person-badge me-2" style="color: var(--primary-color)"></i>Recent Profiles</h6>
+            <a routerLink="/admin/profiles" class="btn btn-sm btn-link">View all</a>
+          </div>
+          @if (data.recent.profiles.length) {
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead><tr><th>Profile</th><th>Category</th><th>Status</th><th>Created</th></tr></thead>
+                <tbody>
+                  @for (p of data.recent.profiles; track p._id) {
+                    <tr>
+                      <td><strong>{{ p.name || p.profileId }}</strong></td>
+                      <td class="text-muted small">{{ p.gender }}</td>
+                      <td><span class="badge badge-status {{ p.status }}">{{ labelOf(statusOf(p.status)) }}</span></td>
+                      <td class="text-muted small">{{ p.createdAt ? (p.createdAt | date:'shortDate') : '' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <p class="text-muted small mb-0">No profiles created yet.</p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

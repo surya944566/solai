@@ -1,0 +1,34 @@
+<section class="faq" id="faq">
+  <div class="container-xl">
+    <div class="row g-5 align-items-start">
+      <div class="col-lg-5">
+        <div class="section-title text-lg-start">
+          <span class="eyebrow">FAQs</span>
+          <h2>Frequently Asked Questions</h2>
+          <p class="text-lg-start">Everything you need to know about Solai Matrimony and how our trusted service works.</p>
+        </div>
+        <div class="faq-art">
+          <div class="faq-circle"><i class="bi bi-question-circle-fill"></i></div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="accordion" id="faqAccordion">
+          @for (faq of faqs; track $index; let i = $index) {
+            <div class="accordion-item faq-item" [class.open]="openIndex === i">
+              <button class="accordion-button faq-btn" [class.collapsed]="openIndex !== i" (click)="toggle(i)" [attr.aria-expanded]="openIndex === i">
+                {{ faq.q }}
+                <i class="bi" [class.bi-chevron-down]="openIndex !== i" [class.bi-chevron-up]="openIndex === i"></i>
+              </button>
+              <div class="accordion-collapse collapse" [class.show]="openIndex === i">
+                <div class="accordion-body faq-answer">
+                  {{ faq.a }}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,12 @@
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.card-custom h6 {
+  font-weight: 700;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}

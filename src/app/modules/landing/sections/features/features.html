@@ -1,0 +1,21 @@
+<section class="features">
+  <div class="container-xl">
+    <div class="section-title">
+      <span class="eyebrow">Why Choose Us</span>
+      <h2>Trusted by Families, Built on Values</h2>
+      <p>Solai Matrimony combines tradition with technology to deliver a safe, premium matchmaking experience.</p>
+    </div>
+
+    <div class="row g-4">
+      @for (feature of features; track feature.title) {
+        <div class="col-md-6 col-lg-3" appReveal>
+          <div class="feature-card card-custom">
+            <div class="feature-icon"><i class="bi {{ feature.icon }}"></i></div>
+            <h5>{{ feature.title }}</h5>
+            <p>{{ feature.text }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

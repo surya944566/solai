@@ -1,0 +1,56 @@
+.enquiries-page h4 {
+  font-weight: 700;
+}
+
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.enquiry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.enquiry-card {
+  border-left: 4px solid var(--secondary-color);
+}
+
+.enq-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--primary-color) 10%, #fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.enq-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.enq-detail {
+  border-top: 1px dashed var(--border-color);
+}
+
+.admin-reply {
+  background: color-mix(in srgb, var(--info-color) 8%, #fff);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem;
+  margin-top: 0.5rem;
+}
+
+.history-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.35rem;
+}

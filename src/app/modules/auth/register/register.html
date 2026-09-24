@@ -1,0 +1,108 @@
+<div class="auth-page">
+  <div class="auth-decor d1"></div>
+  <div class="auth-decor d2"></div>
+
+  <div class="auth-shape">
+    <a class="brand" routerLink="/">
+      <span class="brand-mark"><i class="bi bi-heart-fill"></i></span>
+      <span class="brand-text">Solai Matrimony</span>
+    </a>
+
+    <div class="auth-card register-card">
+      <div class="auth-header">
+        <h2>Create Your Account</h2>
+        <p>Register with your contact details. Our admin team manages all matrimonial profiles.</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="mb-3">
+          <label class="form-label">Full Name / Display Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+            placeholder="e.g. Raghavan S"
+          />
+          @if (form.get('name')?.invalid && form.get('name')?.touched) {
+            <div class="form-text-error">{{ validationMessages['name'] }}</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email or Mobile Number</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="emailOrMobile"
+            [class.is-invalid]="form.get('emailOrMobile')?.invalid && form.get('emailOrMobile')?.touched"
+            placeholder="Enter email or mobile number"
+          />
+          @if (form.get('emailOrMobile')?.invalid && form.get('emailOrMobile')?.touched) {
+            <div class="form-text-error">{{ validationMessages['emailOrMobile'] }}</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+            [class.is-invalid]="(form.get('password')?.invalid && form.get('password')?.touched)"
+            placeholder="At least 6 characters"
+          />
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <div class="form-text-error">{{ validationMessages['password'] }}</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            formControlName="confirmPassword"
+            [class.is-invalid]="((form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched) || (form.errors?.['mismatch'] && form.get('confirmPassword')?.value))"
+            placeholder="Re-enter your password"
+          />
+          @if (form.errors?.['mismatch'] && form.get('confirmPassword')?.value) {
+            <div class="form-text-error">{{ validationMessages['confirmPassword'] }}</div>
+          }
+        </div>
+
+        <div class="admin-info">
+          <div class="admin-info-head">
+            <i class="bi bi-building"></i>
+            <span>Account managed by our office</span>
+          </div>
+          <div class="admin-info-row"><strong>{{ adminContact.officeName }}</strong></div>
+          <div class="admin-info-row"><i class="bi bi-telephone me-2"></i>{{ adminContact.officePhone }}</div>
+          <div class="admin-info-row"><i class="bi bi-geo-alt me-2"></i>{{ adminContact.officeAddress }}</div>
+          <small>For assistance creating your account, contact our office directly.</small>
+        </div>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" formControlName="terms" id="terms" />
+          <label class="form-check-label small" for="terms">
+            I accept the <a href="/" class="text-decoration-none">Terms &amp; Conditions</a> and
+            <a href="/" class="text-decoration-none">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button class="btn btn-primary-custom w-100 py-2" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm me-2"></span>Creating account...
+          } @else {
+            Create Account
+          }
+        </button>
+      </form>
+
+      <div class="auth-alt">
+        Already have an account?
+        <a routerLink="/login" class="alt-link">Log In</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<section class="stats" id="stats-section">
+  <div class="container-xl">
+    <div class="stats-banner">
+      @for (stat of stats; track stat.label; let i = $index) {
+        <div class="stat-item">
+          <span class="stat-icon wrap"><i class="bi {{ stat.icon }}"></i></span>
+          <span class="stat-value">{{ displayed[i].toLocaleString('en-IN') }}+</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>

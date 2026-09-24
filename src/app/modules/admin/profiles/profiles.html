@@ -1,0 +1,235 @@
+<div class="admin-profiles">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h4 class="admin-page-title mb-0">Profile Management</h4>
+    <button class="btn btn-primary-custom" (click)="openNew()"><i class="bi bi-person-plus me-1"></i>Add Profile</button>
+  </div>
+
+  @if (showForm) {
+    <div class="card-custom p-4 mb-4 fade-in-up">
+      <h6 class="mb-3">{{ editing ? 'Edit Profile #' + editing.profileId : 'Create New Profile' }}</h6>
+      <form [formGroup]="form" (ngSubmit)="saveProfile()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-control" formControlName="name" placeholder="e.g. Priya Sharma" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Gender</label>
+            <select class="form-select" formControlName="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" formControlName="dateOfBirth" />
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Marital Status</label>
+            <select class="form-select" formControlName="maritalStatus">
+              <option value="single">Single</option>
+              <option value="married">Married</option>
+              <option value="divorced">Divorced</option>
+              <option value="widowed">Widowed</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Height</label>
+            <input type="text" class="form-control" formControlName="height" placeholder="e.g. 5'9&quot;" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" formControlName="status">
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+              <option value="hidden">Hidden</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Contact Visibility</label>
+            <select class="form-select" formControlName="contactVisibility">
+              <option value="admin_only">Admin Only</option>
+              <option value="private">Private</option>
+              <option value="public">Public</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Education</label>
+            <input type="text" class="form-control" formControlName="education" placeholder="e.g. B.E Computer Science" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Occupation</label>
+            <input type="text" class="form-control" formControlName="occupation" placeholder="e.g. Software Engineer" />
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Salary / Income</label>
+            <input type="text" class="form-control" formControlName="salary" placeholder="e.g. ₹10 LPA" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Location (City)</label>
+            <input type="text" class="form-control" formControlName="location" placeholder="e.g. Chennai" />
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">District</label>
+            <input type="text" class="form-control" formControlName="district" />
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">State</label>
+            <input type="text" class="form-control" formControlName="state" />
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Religion</label>
+            <input type="text" class="form-control" formControlName="religion" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Community</label>
+            <input type="text" class="form-control" formControlName="community" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" formControlName="phone" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" formControlName="email" />
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Profile Photo</label>
+            <div class="d-flex align-items-center gap-3">
+              <input type="file" class="form-control" accept="image/*" (change)="onPhotoSelected($event)" style="max-width: 320px" />
+              @if (photoPreview) {
+                <img [src]="photoPreview" alt="Preview" style="width: 56px; height: 56px; object-fit: cover; border-radius: 10px" />
+              }
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">About</label>
+            <textarea class="form-control" rows="3" formControlName="about"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Family Details</label>
+            <textarea class="form-control" rows="2" formControlName="familyDetails"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Partner Expectations</label>
+            <textarea class="form-control" rows="2" formControlName="partnerExpectations"></textarea>
+          </div>
+
+          <div class="col-12 d-flex gap-2">
+            <button class="btn btn-primary-custom" [disabled]="saving">
+              @if (saving) {
+                <span class="spinner-border spinner-border-sm me-2"></span>Saving...
+              } @else {
+                <i class="bi bi-check-lg me-1"></i>Save Profile
+              }
+            </button>
+            <button type="button" class="btn btn-soft" (click)="showForm = false">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="card-custom p-3 mb-3">
+    <div class="row g-2">
+      <div class="col-md-7">
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search by name, profile ID or location..."
+            [(ngModel)]="keyword"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" [(ngModel)]="statusFilter" (change)="onSearch()">
+          <option value="">All Statuses</option>
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+          <option value="featured">Featured</option>
+          <option value="hidden">Hidden</option>
+          <option value="blocked">Blocked</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-gold w-100" (click)="onSearch()">Search</button>
+      </div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="spinner-wrap"><app-spinner></app-spinner></div>
+  } @else if (error) {
+    <app-empty-state [title]="'Error'" [message]="error" [icon]="'bi-exclamation-triangle'" [actionLabel]="'Retry'" (action)="load()"></app-empty-state>
+  } @else if (!profiles.length) {
+    <app-empty-state [title]="'No profiles found'" [message]="'Create a profile to get started.'" [icon]="'bi-person-badge'"></app-empty-state>
+  } @else {
+    <div class="card-custom overflow-hidden">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Profile</th>
+              <th>Category</th>
+              <th>Location</th>
+              <th>Views</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of profiles; track p._id) {
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <app-profile-img [src]="p.profilePhoto || ''" [name]="p.name" className="table-avatar"></app-profile-img>
+                    <div>
+                      <strong>{{ p.name }}</strong>
+                      <div class="text-muted small">#{{ p.profileId }} · {{ p.age ? p.age + 'y' : '' }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-muted small">
+                  {{ p.gender | titleCase }}
+                  @if (p.isFeatured) {
+                    <span class="badge-status featured ms-1"><i class="bi bi-star-fill"></i></span>
+                  }
+                </td>
+                <td class="text-muted small">{{ p.location || '—' }}</td>
+                <td class="text-muted small">{{ p.views }}</td>
+                <td><span class="badge badge-status {{ p.status }}">{{ p.status | titleCase }}</span></td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <button class="btn btn-sm btn-soft" title="Edit" (click)="openEdit(p)"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-soft" title="Publish / Unpublish" (click)="togglePublish(p)">
+                      <i class="bi {{ p.status === 'published' || p.status === 'featured' ? 'bi-eye-slash' : 'bi-eye' }}"></i>
+                    </button>
+                    <button class="btn btn-sm btn-soft" title="Toggle Featured" (click)="toggleFeature(p)">
+                      <i class="bi {{ p.isFeatured ? 'bi-star' : 'bi-star-fill' }}" style="color: var(--secondary-dark)"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" title="Block" (click)="block(p)"><i class="bi bi-lock"></i></button>
+                    <button class="btn btn-sm btn-outline-danger" title="Delete" (click)="remove(p)"><i class="bi bi-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mt-3">
+      <app-pagination [page]="page" [pages]="pages" (pageChange)="onPageChange($event)"></app-pagination>
+    </div>
+  }
+</div>

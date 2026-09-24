@@ -1,0 +1,175 @@
+<div class="detail-page">
+  <app-site-nav></app-site-nav>
+
+  <div class="detail-hero">
+    <div class="container-xl">
+      <a routerLink="/browse" class="back-link"><i class="bi bi-arrow-left me-1"></i>Back to Browse</a>
+    </div>
+  </div>
+
+  <section class="detail-body py-4">
+    <div class="container-xl">
+      @if (loading) {
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="skeleton" style="aspect-ratio: 4/5; border-radius: var(--radius)"></div>
+          </div>
+          <div class="col-lg-7">
+            <div class="p-2">
+              <div class="skeleton mb-3" style="height: 26px; width: 40%"></div>
+              <div class="skeleton mb-4" style="height: 42px; width: 65%"></div>
+              <div class="skeleton mb-2" style="height: 14px"></div>
+              <div class="skeleton mb-2" style="height: 14px"></div>
+              <div class="skeleton mb-2" style="height: 14px; width: 70%"></div>
+            </div>
+          </div>
+        </div>
+      } @else if (error || !profile) {
+        <div class="empty-state">
+          <span class="empty-icon"><i class="bi bi-person-x"></i></span>
+          <h5>Profile unavailable</h5>
+          <p>{{ error || 'This profile could not be found.' }}</p>
+          <a routerLink="/browse" class="btn btn-primary-custom mt-3">Browse Profiles</a>
+        </div>
+      } @else {
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="detail-gallery card-custom p-0 overflow-hidden">
+              <div class="gallery-main">
+                <app-profile-img [src]="activePhoto" [name]="profile.name"></app-profile-img>
+                @if (profile.status === 'featured' || profile.isFeatured) {
+                  <span class="featured-flag"><i class="bi bi-star-fill me-1"></i>Featured</span>
+                }
+              </div>
+              @if (profile.photos.length > 1) {
+                <div class="gallery-thumbs">
+                  @for (photo of profile.photos; track $index) {
+                    <button
+                      class="thumb"
+                      [class.active]="activePhoto === photo.url"
+                      (click)="activePhoto = photo.url"
+                    >
+                      <app-profile-img [src]="photo.url" [name]="profile.name" className="thumb-img"></app-profile-img>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="card-custom p-4 p-lg-5">
+              <div class="detail-head mb-4">
+                <div>
+                  <span class="profile-id">#{{ profile.profileId }}</span>
+                  <h2 class="mt-1">{{ profile.name }}</h2>
+                  <div class="detail-meta">
+                    @if (profile.age) {
+                      <span><i class="bi bi-calendar3"></i> {{ profile.age }} years</span>
+                    }
+                    <span><i class="bi bi-gender-ambiguous"></i> {{ profile.gender | titleCase }}</span>
+                    @if (profile.maritalStatus) {
+                      <span><i class="bi bi-badge-cc"></i> {{ profile.maritalStatus | titleCase }}</span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail-facts">
+                @if (profile.location) {
+                  <div class="fact"><span class="fact-label"><i class="bi bi-geo-alt"></i> Location</span><span class="fact-value">{{ profile.location }}{{ profile.district ? ', ' + profile.district : '' }}{{ profile.state ? ', ' + profile.state : '' }}</span></div>
+                }
+                @if (profile.education) {
+                  <div class="fact"><span class="fact-label"><i class="bi bi-mortarboard"></i> Education</span><span class="fact-value">{{ profile.education }}</span></div>
+                }
+                @if (profile.occupation) {
+                  <div class="fact"><span class="fact-label"><i class="bi bi-briefcase"></i> Occupation</span><span class="fact-value">{{ profile.occupation }}</span></div>
+                }
+                @if (profile.salary) {
+                  <div class="fact"><span class="fact-label"><i class="bi bi-cash-stack"></i> Salary</span><span class="fact-value">{{ profile.salary }}</span></div>
+                }
+                @if (profile.height) {
+                  <div class="fact"><span class="fact-label"><i class="bi bi-rulers"></i> Height</span><span class="fact-value">{{ profile.height }}</span></div>
+                }
+                @if (profile.religion) {
+                  <div class="fact"><span class="fact-label"><i class="bi bi-gem"></i> Religion</span><span class="fact-value">{{ profile.religion }}{{ profile.community ? ' / ' + profile.community : '' }}</span></div>
+                }
+              </div>
+
+              @if (profile.about) {
+                <div class="detail-block">
+                  <h5>About</h5>
+                  <p class="detail-text">{{ profile.about }}</p>
+                </div>
+              }
+              @if (profile.familyDetails) {
+                <div class="detail-block">
+                  <h5>Family Details</h5>
+                  <p class="detail-text">{{ profile.familyDetails }}</p>
+                </div>
+              }
+              @if (profile.partnerExpectations) {
+                <div class="detail-block">
+                  <h5>Partner Expectations</h5>
+                  <p class="detail-text">{{ profile.partnerExpectations }}</p>
+                </div>
+              }
+
+              <div class="privacy-note mt-3">
+                <i class="bi bi-shield-lock me-2"></i>
+                Contact details are shared only through our admin team after an approved enquiry.
+              </div>
+
+              <div class="detail-actions mt-4">
+                <button class="btn btn-primary-custom" (click)="enquiryOpen = !enquiryOpen" [disabled]="profile.enquiryExists">
+                  @if (profile.enquiryExists) {
+                    <i class="bi bi-check-circle me-1"></i> Enquiry Sent
+                  } @else {
+                    <i class="bi bi-chat-heart me-1"></i> Send Enquiry
+                  }
+                </button>
+                <button class="btn btn-soft" (click)="toggleSave()">
+                  <i [class]="profile.saved ? 'bi bi-heart-fill me-1' : 'bi bi-heart me-1'"></i>
+                  {{ profile.saved ? 'Saved' : 'Save Profile' }}
+                </button>
+                <button class="btn btn-outline-secondary ms-auto" (click)="reportOpen = !reportOpen">
+                  <i class="bi bi-flag me-1"></i> Report
+                </button>
+              </div>
+
+              @if (enquiryOpen && !profile.enquiryExists) {
+                <div class="enquiry-box mt-3 fade-in-up">
+                  <h6>Send an Enquiry</h6>
+                  <textarea class="form-control" rows="3" [(ngModel)]="enquiryMessage" placeholder="Share what you would like us to know..."></textarea>
+                  <button class="btn btn-gold mt-2" (click)="sendEnquiry()" [disabled]="enquirySending">
+                    @if (enquirySending) {
+                      <span class="spinner-border spinner-border-sm me-2"></span>Sending...
+                    } @else {
+                      Submit Enquiry
+                    }
+                  </button>
+                </div>
+              }
+
+              @if (reportOpen) {
+                <div class="report-box mt-3 fade-in-up">
+                  <h6>Report this profile</h6>
+                  <textarea class="form-control" rows="2" [(ngModel)]="reportNote" placeholder="Reason (optional)"></textarea>
+                  <button class="btn btn-danger mt-2" (click)="sendReport()" [disabled]="reportSending">
+                    @if (reportSending) {
+                      <span class="spinner-border spinner-border-sm me-2"></span>Submitting...
+                    } @else {
+                      Submit Report
+                    }
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <app-site-footer></app-site-footer>
+</div>

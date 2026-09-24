@@ -1,0 +1,132 @@
+.showcase {
+  padding: 5rem 0 4rem;
+  background: linear-gradient(180deg, #fdf4ee 0%, var(--background-color) 100%);
+}
+
+.showcase-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.showcase-media {
+  position: relative;
+  min-height: 420px;
+}
+
+.showcase-media :is(.profile-img, img, .avatar-placeholder) {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  object-fit: cover;
+}
+
+.spotlight-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: linear-gradient(135deg, var(--secondary-color), #e6c34d);
+  color: #fff;
+  padding: 0.45rem 1.1rem;
+  border-radius: 40px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  box-shadow: 0 6px 18px rgba(169, 135, 28, 0.4);
+}
+
+.showcase-body {
+  padding: 2.5rem 2rem;
+}
+
+.showcase-body .eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--secondary-dark);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.showcase-body h3 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin: 0.3rem 0 0.8rem;
+}
+
+.showcase-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-bottom: 1.4rem;
+}
+
+.showcase-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.showcase-meta i {
+  color: var(--primary-color);
+}
+
+.showcase-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.fact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: color-mix(in srgb, var(--primary-color) 5%, #fff);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.9rem;
+}
+
+.fact-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.fact-item small {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fact-item strong {
+  font-size: 0.9rem;
+}
+
+.showcase-about {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 560px;
+}
+
+@media (max-width: 767.98px) {
+  .showcase-media {
+    min-height: 300px;
+  }
+  .showcase-media :is(.profile-img, img, .avatar-placeholder) {
+    min-height: 300px;
+  }
+  .showcase-body {
+    padding: 1.8rem 1.2rem;
+  }
+}

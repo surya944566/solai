@@ -1,0 +1,35 @@
+.report-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.report-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.report-card p {
+  min-height: 38px;
+}
+
+.report-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.table thead th {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+}

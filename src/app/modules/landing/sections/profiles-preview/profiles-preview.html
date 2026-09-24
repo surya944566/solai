@@ -1,0 +1,69 @@
+<section class="preview-section" id="about">
+  <div class="container-xl">
+    <div class="section-title">
+      <span class="eyebrow">Browse Profiles</span>
+      <h2>Explore Our Trusted Profiles</h2>
+      <p>Find your perfect match among our carefully verified matrimonial profiles.</p>
+    </div>
+
+    <div class="tabs-wrap">
+      <ul class="nav nav-pills preview-tabs">
+        @for (tab of tabs; track tab.key) {
+          <li class="nav-item">
+            <button class="nav-link" [class.active]="active === tab.key" (click)="selectTab(tab.key)">
+              <i class="bi {{ tab.icon }} me-2"></i>{{ tab.label }}
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="preview-body">
+      @if (loading) {
+        <div class="row g-4">
+          @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card-custom p-0 overflow-hidden">
+                <div class="skeleton" style="aspect-ratio: 1/1.05; border-radius: 0"></div>
+                <div class="p-3">
+                  <div class="skeleton mb-2" style="height: 14px; width: 60%"></div>
+                  <div class="skeleton" style="height: 12px; width: 80%"></div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (error) {
+        <div class="empty-state">
+          <span class="empty-icon"><i class="bi bi-exclamation-triangle"></i></span>
+          <h5>Something went wrong</h5>
+          <p>{{ error }}</p>
+          <button class="btn btn-primary-custom mt-3" (click)="load()">Try Again</button>
+        </div>
+      } @else if (!profiles.length) {
+        <div class="empty-state">
+          <span class="empty-icon"><i class="bi bi-inbox"></i></span>
+          <h5>No profiles yet</h5>
+          <p>New profiles are added regularly. Check back soon!</p>
+        </div>
+      } @else {
+        <div class="row g-4">
+          @for (profile of profiles; track profile._id) {
+            <div class="col-6 col-md-4 col-lg-3">
+              <app-profile-card
+                [profile]="profile"
+                (onSave)="toggleSave($event)"
+              ></app-profile-card>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="text-center mt-4">
+      <a routerLink="/browse" class="btn btn-outline-gold btn-lg">
+        View All Profiles <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</section>

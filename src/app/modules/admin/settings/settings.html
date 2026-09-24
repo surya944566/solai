@@ -1,0 +1,80 @@
+<div class="admin-settings">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h4 class="admin-page-title mb-0">Site Settings</h4>
+    <button class="btn btn-primary-custom" (click)="save()" [disabled]="saving || loading">
+      @if (saving) {
+        <span class="spinner-border spinner-border-sm me-2"></span>Saving...
+      } @else {
+        <i class="bi bi-check-lg me-1"></i>Save All
+      }
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="spinner-wrap"><app-spinner></app-spinner></div>
+  } @else if (error) {
+    <app-empty-state [title]="'Error'" [message]="error" [icon]="'bi-exclamation-triangle'" [actionLabel]="'Retry'" (action)="load()"></app-empty-state>
+  } @else {
+    <form (ngSubmit)="save()">
+      <div class="row g-4">
+        @for (section of grouped; track section.group) {
+          <div class="col-lg-6">
+            <div class="card-custom p-4">
+              <h6 class="mb-3"><i class="bi bi-sliders me-2" style="color: var(--primary-color)"></i>{{ section.label }}</h6>
+              @for (field of section.entries; track field.key) {
+                <div class="mb-3">
+                  <label class="form-label fw-semibold small">{{ labelOf(field.key.split('_').join(' ')) }}</label>
+                  @if (typeof field.value === 'boolean') {
+                    <select
+                      class="form-select"
+                      [ngModel]="field.value"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="setValue(field.rawKey, $event)"
+                    >
+                      <option [ngValue]="true">Yes</option>
+                      <option [ngValue]="false">No</option>
+                    </select>
+                  } @else if (typeof field.value === 'number') {
+                    <input
+                      type="number"
+                      class="form-control"
+                      [ngModel]="field.value"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="setValue(field.rawKey, $event)"
+                    />
+                  } @else if (isLong(field.value)) {
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      [ngModel]="field.value"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="setValue(field.rawKey, $event)"
+                    ></textarea>
+                  } @else {
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="field.value"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="setValue(field.rawKey, $event)"
+                    />
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="text-end mt-4">
+        <button class="btn btn-primary-custom" [disabled]="saving">
+          @if (saving) {
+            <span class="spinner-border spinner-border-sm me-2"></span>Saving...
+          } @else {
+            <i class="bi bi-check-lg me-1"></i>Save All Changes
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,93 @@
+<div class="admin-support">
+  <h4 class="admin-page-title">Support Conversations</h4>
+
+  @if (error && !conversations.length) {
+    <app-empty-state [title]="'Error'" [message]="error" [icon]="'bi-exclamation-triangle'" [actionLabel]="'Retry'" (action)="load()"></app-empty-state>
+  } @else {
+    <div class="chat-wrap card-custom overflow-hidden">
+      <div class="chat-side">
+        <h6 class="chat-side-title">Conversations</h6>
+        @if (loading) {
+          <div class="p-3"><app-spinner></app-spinner></div>
+        } @else if (!conversations.length) {
+          <div class="p-3 text-center text-muted small">No conversations yet.</div>
+        } @else {
+          @for (conv of conversations; track conv._id) {
+            <button class="conv-item" [class.active]="active?._id === conv._id" (click)="openConvo(conv)">
+              <div class="conv-top">
+                <strong>{{ userOf(conv) }}</strong>
+                @if (conv.unreadForAdmin) {
+                  <span class="conv-badge">{{ conv.unreadForAdmin }}</span>
+                }
+              </div>
+              <div class="conv-preview">
+                <span class="badge badge-status {{ conv.status }}">{{ conv.status }}</span>
+                <span class="text-truncate">{{ conv.lastMessagePreview || 'No messages yet' }}</span>
+              </div>
+            </button>
+          }
+        }
+      </div>
+
+      <div class="chat-main">
+        @if (!active) {
+          <div class="chat-empty">
+            <span class="chat-empty-icon"><i class="bi bi-headset"></i></span>
+            <p class="mb-0">Select a conversation to view messages.</p>
+          </div>
+        } @else {
+          <div class="chat-header">
+            <div class="d-flex align-items-center gap-2">
+              <strong>{{ userOf(active) }}</strong>
+              <span class="badge badge-status {{ active.status }}">{{ active.status }}</span>
+              @if (active.status === 'open') {
+                <button class="btn btn-sm btn-soft" (click)="close(active)"><i class="bi bi-x-circle me-1"></i>Close</button>
+                <button class="btn btn-sm btn-outline-danger" (click)="block(active)"><i class="bi bi-ban me-1"></i>Block</button>
+              }
+            </div>
+            @if (active.subject) {
+              <span class="text-muted small">{{ active.subject }}</span>
+            }
+          </div>
+
+          <div id="admin-chat-messages" class="chat-messages">
+            @if (loadingMessages) {
+              <div class="text-center p-4"><app-spinner></app-spinner></div>
+            } @else {
+              @for (msg of messages; track msg._id) {
+                <div class="msg-row {{ msg.sender === 'admin' ? 'mine' : 'theirs' }}">
+                  <div class="msg-bubble">
+                    <span class="msg-name">{{ msg.senderName || (msg.sender === 'admin' ? 'You' : userOf(active)) }}</span>
+                    <p class="mb-0">{{ msg.body }}</p>
+                    <span class="msg-time">{{ msg.createdAt ? (msg.createdAt | date:'short') : '' }}</span>
+                  </div>
+                </div>
+              }
+              @if (!messages.length) {
+                <p class="text-center text-muted small py-4">No messages yet.</p>
+              }
+            }
+          </div>
+
+          <div class="chat-input">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Reply to this member..."
+              [(ngModel)]="draft"
+              (keyup.enter)="send()"
+              [disabled]="active.status === 'closed' || active.status === 'blocked'"
+            />
+            <button class="btn btn-primary-custom" (click)="send()" [disabled]="sending || !draft.trim() || active.status === 'closed' || active.status === 'blocked'">
+              @if (sending) {
+                <span class="spinner-border spinner-border-sm"></span>
+              } @else {
+                <i class="bi bi-send"></i>
+              }
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

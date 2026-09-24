@@ -1,0 +1,15 @@
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.enq-detail {
+  border-top: 1px dashed var(--border-color);
+}
+
+.enq-detail .form-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}

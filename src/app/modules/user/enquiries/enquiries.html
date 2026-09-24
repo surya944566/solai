@@ -1,0 +1,100 @@
+<div class="enquiries-page">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">My Enquiries</h4>
+    <a routerLink="/browse" class="btn btn-soft btn-sm"><i class="bi bi-chat-heart me-1"></i>New Enquiry</a>
+  </div>
+
+  @if (loading) {
+    <div class="spinner-wrap"><app-spinner></app-spinner></div>
+  } @else if (error) {
+    <app-empty-state
+      [title]="'Something went wrong'"
+      [message]="error"
+      [icon]="'bi-exclamation-triangle'"
+      [actionLabel]="'Retry'"
+      (action)="load()"
+    ></app-empty-state>
+  } @else if (!enquiries.length) {
+    <app-empty-state
+      [title]="'No enquiries yet'"
+      [message]="'Send an enquiry on a profile you like and our team will help you connect.'"
+      [icon]="'bi-chat-heart'"
+      [actionLabel]="'Browse Profiles'"
+      (action)="goBrowse()"
+    ></app-empty-state>
+  } @else {
+    <div class="enquiry-list">
+      @for (enq of enquiries; track enq._id) {
+        <div class="enquiry-card card-custom p-3 p-md-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-auto">
+              <div class="enq-avatar">
+                @if (enq.profile && profilePhoto(enq)) {
+                  <img [src]="profilePhoto(enq)" alt="{{ profileName(enq) }}" />
+                } @else {
+                  <span><i class="bi bi-person-hearts"></i></span>
+                }
+              </div>
+            </div>
+            <div class="col">
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <strong>{{ profileName(enq) }}</strong>
+                @if (profileId(enq)) {
+                  <span class="text-muted small">#{{ profileId(enq) }}</span>
+                }
+                <span class="badge badge-status {{ enq.status }}">{{ statusLabel(enq.status) }}</span>
+              </div>
+              <div class="text-muted small mt-1">
+                <i class="bi bi-gender-ambiguous me-1"></i>{{ gender(enq) ? (gender(enq) | titleCase) : '—' }}
+                @if (education(enq)) {
+                  · {{ education(enq) }}
+                }
+              </div>
+              @if (enq.createdAt) {
+                <span class="text-muted small">Sent {{ enq.createdAt | date:'mediumDate' }}</span>
+              }
+            </div>
+            <div class="col-auto d-flex gap-2">
+              @if (canCancel(enq)) {
+                <button class="btn btn-sm btn-outline-danger" (click)="cancel(enq._id)">Cancel</button>
+              }
+              <button class="btn btn-sm btn-soft" (click)="toggleDetail(enq._id)">
+                <i [class]="openDetail === enq._id ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+              </button>
+            </div>
+          </div>
+
+          @if (openDetail === enq._id) {
+            <div class="enq-detail mt-3 pt-3 fade-in-up">
+              @if (enq.message) {
+                <p class="mb-2"><strong>Your message:</strong><br />{{ enq.message }}</p>
+              }
+              @if (enq.adminReply) {
+                <div class="admin-reply">
+                  <strong>Admin response:</strong>
+                  <p class="mb-0 mt-1">{{ enq.adminReply }}</p>
+                </div>
+              }
+              @if (enq.history?.length) {
+                <div class="mt-3">
+                  <h6 class="small text-muted">Status History</h6>
+                  @for (h of enq.history; track $index) {
+                    <div class="history-row small">
+                      <span class="badge badge-status {{ h.status }}">{{ statusLabel(h.status) }}</span>
+                      <span class="text-muted">{{ h.at ? (h.at | date:'medium') : '' }}</span>
+                    </div>
+                  }
+                </div>
+              }
+              @if (linkId(enq)) {
+                <a [routerLink]="['/browse/profile', linkId(enq)]" class="btn btn-sm btn-link p-0 mt-2">
+                  <i class="bi bi-arrow-right me-1"></i> View profile
+                </a>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

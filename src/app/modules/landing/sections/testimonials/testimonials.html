@@ -1,0 +1,27 @@
+<section class="testimonials">
+  <div class="container-xl">
+    <div class="section-title">
+      <span class="eyebrow">Success Stories</span>
+      <h2>What Our Families Say</h2>
+    </div>
+
+    <div class="row g-4">
+      @for (t of testimonials; track t.name) {
+        <div class="col-md-4" appReveal>
+          <div class="testimonial-card card-custom">
+            <div class="quote-icon"><i class="bi bi-quote"></i></div>
+            <p class="testimonial-text">{{ t.text }}</p>
+            <div class="testimonial-footer">
+              <span class="testimonial-avatar" [style.background]="t.color">{{ t.initials }}</span>
+              <span>
+                <strong>{{ t.name }}</strong>
+                <small>{{ t.relation }}</small>
+              </span>
+              <span class="stars ms-auto"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

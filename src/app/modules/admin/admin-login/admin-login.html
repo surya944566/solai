@@ -1,0 +1,36 @@
+<div class="admin-login-page">
+  <a routerLink="/" class="back-home"><i class="bi bi-arrow-left me-1"></i>Back to Site</a>
+
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="brand-badge"><i class="bi bi-shield-lock"></i></span>
+      <h2>Solai Matrimony</h2>
+      <p>Administration Portal</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <div class="mb-3">
+        <label class="form-label">Admin Email</label>
+        <input type="email" class="form-control" formControlName="email" placeholder="admin@solaimatrimony.com" />
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" formControlName="password" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-gold w-100" [disabled]="loading">
+        @if (loading) {
+          <span class="spinner-border spinner-border-sm me-2"></span>Signing in...
+        } @else {
+          <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+        }
+      </button>
+    </form>
+
+    <div class="login-foot">
+      <small class="text-muted">
+        Default: admin@solaimatrimony.com / admin123456<br />
+        (Change via backend seed / DB in production.)
+      </small>
+    </div>
+  </div>
+</div>

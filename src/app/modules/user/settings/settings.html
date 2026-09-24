@@ -1,0 +1,73 @@
+<div class="settings-page">
+  <h4 class="mb-4">Settings</h4>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card-custom p-4">
+        <h5><i class="bi bi-person-circle me-2" style="color: var(--primary-color)"></i>Profile Information</h5>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" formControlName="name" placeholder="Your full name" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mobile</label>
+            <input type="text" class="form-control" formControlName="mobile" placeholder="Contact number" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" [value]="auth.user?.email || ''" disabled />
+            <div class="form-text">Email cannot be changed. Contact us for assistance.</div>
+          </div>
+          <button class="btn btn-primary-custom" [disabled]="savingProfile">
+            @if (savingProfile) {
+              <span class="spinner-border spinner-border-sm me-2"></span>Saving...
+            } @else {
+              <i class="bi bi-check-lg me-1"></i>Save Changes
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card-custom p-4 mb-4">
+        <h5><i class="bi bi-shield-lock me-2" style="color: var(--primary-color)"></i>Change Password</h5>
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="mb-3">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-control" formControlName="currentPassword" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-control" formControlName="newPassword" />
+            <div class="form-text">Minimum 6 characters.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" formControlName="confirmPassword" />
+          </div>
+          @if (passwordForm.errors?.['mismatch'] && passwordForm.get('confirmPassword')?.touched) {
+            <div class="text-danger small mb-2">Passwords do not match.</div>
+          }
+          <button class="btn btn-gold w-100" [disabled]="savingPassword">
+            @if (savingPassword) {
+              <span class="spinner-border spinner-border-sm me-2"></span>Updating...
+            } @else {
+              <i class="bi bi-key me-1"></i>Update Password
+            }
+          </button>
+        </form>
+      </div>
+
+      @if (contact) {
+        <div class="card-custom p-4">
+          <h5><i class="bi bi-building me-2" style="color: var(--primary-color)"></i>Administration Office</h5>
+          <div class="mb-2"><strong>{{ contact.officeName }}</strong></div>
+          <div class="text-muted small mb-1"><i class="bi bi-telephone me-2"></i>{{ contact.officePhone }}</div>
+          <div class="text-muted small"><i class="bi bi-geo-alt me-2"></i>{{ contact.officeAddress }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
