@@ -28,18 +28,28 @@ require('dotenv').config({
   path: path.join(__dirname, '..', '.env'),
 });
 
-const corsOrigins = (process.env.CORS_ORIGINS || 'https://solaimatrimony.netlify.app')
-  .split(',')
-  .map((s) => s.trim().replace(/\/$/, ''))
-  .filter(Boolean);
+const normalizeOrigin = (value) =>
+  value?.trim().replace(/\/$/, '');
+
+const clientUrl = normalizeOrigin(
+  process.env.CLIENT_URL || 'https://solaimatrimony.netlify.app'
+);
+
+const corsOrigins = [
+  clientUrl,
+
+  ...(process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map(normalizeOrigin)
+    .filter(Boolean),
+].filter((value, index, array) => array.indexOf(value) === index);
 
 module.exports = {
   port: process.env.PORT || 5000,
 
   nodeEnv: process.env.NODE_ENV || 'development',
 
-  clientUrl:
-    process.env.CLIENT_URL || 'https://solaimatrimony.netlify.app',
+  clientUrl,
 
   corsOrigins,
 
@@ -66,8 +76,7 @@ module.exports = {
     process.env.MAX_FILE_SIZE || '5mb',
 
   socketCorsOrigin:
-    (process.env.SOCKET_CORS_ORIGIN ||
-      'https://solaimatrimony.netlify.app')
-      .trim()
-      .replace(/\/$/, ''),
+    normalizeOrigin(
+      process.env.SOCKET_CORS_ORIGIN || clientUrl
+    ),
 };
