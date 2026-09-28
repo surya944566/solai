@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api',
-  socketUrl: 'http://localhost:5000',
-  uploadsUrl: 'http://localhost:5000/uploads',
+  apiUrl: 'https://solai-m2iy.onrender.com/api',
+  socketUrl: 'https://solai-m2iy.onrender.com',
+  uploadsUrl: 'https://solai-m2iy.onrender/uploads',
 };
