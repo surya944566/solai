@@ -17,14 +17,21 @@ const app = express();
 
 fs.mkdirSync(env.uploadDir, { recursive: true });
 
+// const corsOptions = {
+//   origin(origin, callback) {
+//     if (!origin || env.corsOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error(`Origin ${origin} is not allowed by CORS`));
+//     }
+//   },
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// };
+
 const corsOptions = {
-  origin(origin, callback) {
-    if (!origin || env.corsOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`Origin ${origin} is not allowed by CORS`));
-    }
-  },
+  origin: 'https://solamatrimony.netlify.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
