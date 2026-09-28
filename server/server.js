@@ -84,9 +84,15 @@ global.io = io;
 
 setupSocket(io);
 
+// connectDB().then(() => {
+//   server.listen(env.port, () => {
+//     console.log(`Solai Matrimony API running on http://localhost:${env.port}`);
+//   });
+// });
+
 connectDB().then(() => {
-  server.listen(env.port, () => {
-    console.log(`Solai Matrimony API running on http://localhost:${env.port}`);
+  server.listen(env.port, '0.0.0.0', () => {
+    console.log(`Solai Matrimony API running on port ${env.port}`);
   });
 });
 
