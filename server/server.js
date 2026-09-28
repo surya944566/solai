@@ -83,10 +83,18 @@ app.use(notFound);
 app.use(errorHandler);
 
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: env.socketCorsOrigin, credentials: true },
-});
+// const io = new Server(server, {
+//   cors: { origin: env.socketCorsOrigin, credentials: true },
+// });
 
+
+const io = new Server(server, {
+  cors: {
+    origin: 'https://solamatrimony.netlify.app',
+    credentials: true,
+    methods: ['GET', 'POST'],
+  },
+});
 global.io = io;
 
 setupSocket(io);
